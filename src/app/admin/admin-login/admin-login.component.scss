@@ -1,0 +1,118 @@
+/* The import MUST be at the very top of the file */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif; 
+
+  /* --- APPLY THE WASHED-OUT BACKGROUND EFFECT --- */
+
+  /* We achieve this by layering multiple background elements.
+     The FIRST item listed is on TOP of the stack. */
+  background-image: 
+    /* LAYER 1: The 'Hint of White' (a linear-gradient that is solid white) */
+    /* The 0.7 creates 70% opacity, letting some image through */
+    linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+    
+    /* LAYER 2: The Base Image */
+    url('../../../assets/landingpage-bg.jpg'); // (Assuming correct path)
+
+  /* Standard background properties that apply to both layers */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-card {
+  background-color: white;
+  padding: 80px; 
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 500px;
+  max-width: 40vw; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+/* Style the title and subtitles */
+/* Note: I removed the font-family lines here because they now inherit it from .login-wrapper */
+h1 { margin: 0; font-weight: 800; font-size: 2.2rem; } /* Changed to 800 to match your image */
+h2 { margin: 0; font-size: 1rem; color: #666; font-weight: 500; } /* Upped to 500 so it's not too thin */
+.admin-portal { margin: 0 0 20px 0; font-size: 0.9rem; color: #666; }
+
+/* Style the form and form groups */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+input[type="email"], input[type="password"] {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  /* 2. Force inputs to inherit the Inter font instead of using Arial/Times */
+  font-family: inherit; 
+}
+
+/* Style the Remember Me/Forgot group */
+.options-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.forgot-password {
+  color: #8a0000; 
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Style the Sign In button */
+.sign-in-btn {
+  background-color: #660000; 
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 15px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  /* 3. Force the button to inherit the Inter font as well */
+  font-family: inherit; 
+}
+
+/* Style the bottom text */
+.bottom-text {
+  margin-top: 30px;
+  font-size: 0.8rem;
+  color: #777;
+}

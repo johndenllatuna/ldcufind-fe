@@ -1,1 +1,56 @@
-/* You can add global styles to this file, and also import other style files */
+/* --- GLOBAL FONT & RESET --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa; /* Optional: A slight off-white background for the app */
+}
+
+/* --- BASE ICON MASK (Makes the icons act like fonts!) --- */
+.custom-mask {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  /* 'currentColor' is magic: it makes the icon white by default, and maroon when active! */
+  background-color: currentColor; 
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+/* --- SIDEBAR ICON MAPPING --- */
+/* Mapping the classes in your HTML to the files in your assets folder */
+.dashboard-mask { mask-image: url('/assets/icons/dashboard-icon.svg'); -webkit-mask-image: url('/assets/icons/dashboard-icon.svg'); }
+.box-mask       { mask-image: url('/assets/icons/item-management-icon.svg'); -webkit-mask-image: url('/assets/icons/item-management-icon.svg'); }
+.check-mask     { mask-image: url('/assets/icons/claim-verification-icon.svg'); -webkit-mask-image: url('/assets/icons/claim-verification-icon.svg'); }
+.plus-mask      { mask-image: url('/assets/icons/post-item-icon.svg'); -webkit-mask-image: url('/assets/icons/post-item-icon.svg'); }
+.user-mask      { mask-image: url('/assets/icons/users-icon.svg'); -webkit-mask-image: url('/assets/icons/users-icon.svg'); }
+.door-mask      { mask-image: url('/assets/icons/logout-icon.svg'); -webkit-mask-image: url('/assets/icons/logout-icon.svg'); }
+
+/* --- ITEM MANAGEMENT ICON MAPPING --- */
+.search-icon-mask   { mask-image: url('/assets/icons/search-icon.svg'); -webkit-mask-image: url('/assets/icons/search-icon.svg'); }
+.location-icon-mask { mask-image: url('/assets/icons/location-icon.svg'); -webkit-mask-image: url('/assets/icons/location-icon.svg'); }
+.calendar-icon-mask { mask-image: url('/assets/icons/calendar-icon.svg'); -webkit-mask-image: url('/assets/icons/calendar-icon.svg'); }
+.edit-icon-mask      { mask-image: url('/assets/icons/edit-icon.svg'); -webkit-mask-image: url('/assets/icons/edit-icon.svg'); } /* For the square next to details */
+
+/* --- GLOBAL ADMIN LAYOUT --- */
+.dashboard-layout {
+  display: flex; /* This is the magic word that puts them side-by-side! */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevents the whole page from scrolling */
+  background-color: #f8f9fa; /* Matches your Figma background */
+}
+
+.main-content {
+  flex-grow: 1; /* Tells the main area to take up all the remaining space */
+  padding: 30px;
+  overflow-y: auto; /* Allows only the right side to scroll if there are lots of items */
+}
