@@ -1,6 +1,8 @@
 /* --- HEADER --- */
 .page-header {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-left: 10px;
   h1 { margin: 0; font-size: 1.8rem; font-weight: 700; color: #111; }
 }
 
@@ -12,6 +14,7 @@
 }
 
 .search-bar {
+  margin-left: 10px;
   flex-grow: 1; /* Pushes the dropdown to the right */
   display: flex;
   align-items: center;
@@ -55,12 +58,17 @@
 /* --- ITEMS GRID --- */
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns based on Figma */
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Automatically fits cards side-by-side */
+  gap: 20px; 
+  padding-left: 0; /* Ensures nothing is pushing it right */
+  margin-left: 0;
 }
+
+
 
 /* --- ITEM CARD --- */
 .item-card {
+  margin-left: 10px;
   background-color: white;
   border: 1px solid #eaeaea;
   border-radius: 12px;

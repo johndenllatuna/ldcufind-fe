@@ -1,0 +1,38 @@
+<div class="dashboard-layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Post an Item</h1>
+    </header>
+
+    <div class="form-container">
+      <div class="form-group">
+        <label for="itemName">Item Name</label>
+        <input type="text" id="itemName" placeholder="e.g., Black Airpods">
+      </div>
+
+      <div class="form-group">
+        <label for="itemDescription">Description</label>
+        <textarea id="itemDescription" rows="4" placeholder="Describe the item's condition or unique marks..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="itemLocation">Found Location</label>
+          <input type="text" id="itemLocation" placeholder="e.g., NAC Building, Room 302">
+        </div>
+        
+        <div class="form-group">
+          <label for="itemDate">Date Found</label>
+          <input type="date" id="itemDate">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="cancel-btn">Cancel</button>
+        <button class="submit-btn">Post Item</button>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,16 +1,20 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-// 1. ADD THIS IMPORT AT THE TOP:
-import { Sidebar } from '../../shared/sidebar/sidebar.component'; 
+import { Component, inject, OnInit } from '@angular/core';
+import { ItemService, Item } from '../../services/item.service'; // Adjust path if needed
 
 @Component({
   selector: 'app-item-management',
-  standalone: true,
-  // 2. ADD IT TO THIS ARRAY:
-  imports: [RouterLink, Sidebar], 
   templateUrl: './item-management.component.html',
-  styleUrl: './item-management.component.scss'
+  styleUrls: ['./item-management.component.scss']
 })
-export class ItemManagement {
-  // ... your existing code
+export class ItemManagementComponent implements OnInit {
+  // Inject the service
+  private itemService = inject(ItemService);
+  
+  // This array will hold the data for the HTML to loop through
+  items: Item[] = [];
+
+  ngOnInit() {
+    // When the page loads, grab the data from the service
+    this.items = this.itemService.getItems();
+  }
 }

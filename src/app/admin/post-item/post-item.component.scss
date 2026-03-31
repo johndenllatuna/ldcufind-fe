@@ -1,0 +1,88 @@
+.page-header {
+  margin-bottom: 30px;
+  h1 { margin: 0; font-size: 1.8rem; font-weight: 700; color: #111; }
+}
+
+.form-container {
+  background-color: white;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 800px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  input, textarea {
+    padding: 12px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #8a0000; /* Your brand maroon */
+    }
+    
+    &::placeholder {
+      color: #999;
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  
+  .form-group {
+    flex: 1; /* Makes columns side-by-side */
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eaeaea;
+
+  button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .cancel-btn {
+    background-color: transparent;
+    border: 1px solid #dcdcdc;
+    color: #555;
+
+    &:hover { background-color: #f8f9fa; }
+  }
+
+  .submit-btn {
+    background-color: #8a0000;
+    border: none;
+    color: white;
+
+    &:hover { background-color: #6b0000; }
+  }
+}

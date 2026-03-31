@@ -7,43 +7,6 @@
   margin: 0;
 }
 
-/* --- 2. SIDEBAR --- */
-.sidebar {
-  width: 250px;
-  background-color: #8a0000; /* Deep Maroon */
-  color: white;
-  display: flex;
-  flex-direction: column; /* Stacks profile, links, and sign-out vertically */
-  padding: 30px 0;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 0 25px 30px 25px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Faint white line */
-  margin-bottom: 20px;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  color: #8a0000;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  font-size: 1.2rem;
-}
-
-.user-name {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
 /* --- 3. NAVIGATION LINKS --- */
 .nav-links {
   flex-grow: 1; /* This is magic: it pushes the bottom-links down to the bottom! */
