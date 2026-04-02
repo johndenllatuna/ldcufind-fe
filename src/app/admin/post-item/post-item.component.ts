@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common'; // 👈 1. Added this import
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // 👈 2. Added ReactiveFormsModule here
 import { ItemService } from '../../services/item.service'; // Adjust path if needed
+import { Sidebar } from '../../shared/sidebar/sidebar.component'; 
 
 @Component({
   selector: 'app-post-item',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, Sidebar], 
   templateUrl: './post-item.component.html',
-  styleUrls: ['./post-item.component.scss']
+  styleUrl: './post-item.component.scss'
 })
-export class PostItemComponent {
+export class PostItem {
   postItemForm: FormGroup;
 
   constructor(private fb: FormBuilder, private itemService: ItemService) {
