@@ -48,96 +48,6 @@
   }
 }
 
-/* --- CUSTOM STATUS DROPDOWN --- */
-.status-filter {
-  position: relative;
-  width: 180px; /* Fixed width so it doesn't jump when text changes */
-  font-family: inherit;
-  z-index: 10; /* Keeps dropdown above the grid items */
-}
-
-.custom-select {
-  position: relative;
-  
-  .selected-value {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    background-color: white;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #333;
-    cursor: pointer;
-    user-select: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-
-    &:hover { border-color: #bbb; }
-
-    .arrow {
-      margin-left: auto;
-      font-size: 0.7rem;
-      color: #888;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-
-  /* When the dropdown is clicked open */
-  &.open .selected-value {
-    border-color: #8a0000; /* Liceo Theme Color */
-    box-shadow: 0 0 0 3px rgba(138, 0, 0, 0.1);
-    
-    .arrow {
-      transform: rotate(180deg);
-    }
-  }
-}
-
-.options-list {
-  position: absolute;
-  top: calc(100% + 5px); /* Just slightly below the button */
-  left: 0;
-  right: 0;
-  background-color: white;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  margin: 0;
-  padding: 5px 0;
-  list-style: none;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  animation: slideDown 0.2s ease-out forwards;
-  transform-origin: top;
-
-  li {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    font-size: 0.95rem;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: #f7f7f7;
-    }
-  }
-}
-
-/* Status Dots mapped from your Image */
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 12px;
-  display: inline-block;
-  flex-shrink: 0;
-
-  &.all { background-color: #d1d5db; }          /* Gray */
-  &.pending { background-color: #f59e0b; }      /* Orange */
-  &.claimed { background-color: #10b981; }      /* Green */
-  &.turned-over { background-color: #3b82f6; }  /* Blue */
-  &.disposed { background-color: #ef4444; }     /* Red */
-}
 
 /* Smooth opening animation */
 @keyframes slideDown {
@@ -148,48 +58,66 @@
 /* --- ITEMS GRID --- */
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Automatically fits cards side-by-side */
-  gap: 20px; 
+  /* CHANGED: Forces exactly 3 columns instead of auto-filling */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 15px; /* Slightly smaller gap to fit everything better */
   width: 100%;
-  padding-left: 0; /* Ensures nothing is pushing it right */
-  margin-left: 0;
+  
+  /* THE SCROLL MAGIC */
+  max-height: calc(100vh - 280px); /* Adjusts dynamically to screen size */
+  overflow-y: auto; /* Adds a scrollbar only when needed */
+  padding-right: 10px; /* Prevents the scrollbar from overlapping cards */
 }
 
+/* Optional: Make the scrollbar look elegant (works in Chrome/Edge/Safari) */
+.items-grid::-webkit-scrollbar {
+  width: 6px;
+}
+.items-grid::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
 
-
-/* --- ITEM CARD --- */
+/* --- ITEM CARD TWEAKS (To make them smaller) --- */
 .item-card {
   width: 100%;
-  margin-left: 0px;
   background-color: white;
   border: 1px solid #eaeaea;
   border-radius: 12px;
-  overflow: hidden; /* Keeps the image inside the rounded corners */
+  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
 }
 
 .card-image {
-  height: 180px;
+  height: 140px; /* CHANGED: Reduced from 180px to save vertical space */
   background-color: #f7f7f7;
   
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image fills the box without stretching */
+    object-fit: cover;
   }
 }
 
 .card-content {
-  padding: 20px;
+  padding: 15px; /* CHANGED: Reduced from 20px */
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 
-  h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #111; }
-  
-  .description { margin: 0 0 15px 0; font-size: 0.85rem; color: #777; }
+  h3 { margin: 0 0 5px 0; font-size: 1rem; } /* Slightly smaller text */
+  .description { 
+    margin: 0 0 10px 0; 
+    font-size: 0.8rem; 
+    
+    /* TRICK: This limits the description to exactly 2 lines so cards stay equal height! */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 .meta-info {
