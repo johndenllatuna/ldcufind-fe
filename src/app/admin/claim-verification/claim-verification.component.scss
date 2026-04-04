@@ -14,6 +14,10 @@
   }
 }
 
+.status-message {
+  margin-top: 15px;
+  margin-right: 140px;
+}
 /* --- THE NEW TABLE STYLES --- */
 .table-container {
   background-color: white;
@@ -139,9 +143,27 @@
   color: #888;
 }
 
-/* --- VIEW BUTTON --- */
+/* --- VIEW & CLOSE BUTTON --- */
 
 .view-btn {
+  background-color: transparent;
+  border: 1px solid #555;
+  color: #555;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #8a0000;
+    color: white;
+  }
+}
+
+.close-action-btn {
+  margin-top: 10px;
   background-color: transparent;
   border: 1px solid #555;
   color: #555;
