@@ -5,7 +5,7 @@
   </div>
 
   <nav class="nav-links">
-    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+    <a routerLink="/admin-dashboard" routerLinkActive="active" class="nav-item">
       <span class="custom-mask dashboard-mask"></span> Dashboard
     </a>
     
@@ -25,14 +25,14 @@
       <span class="custom-mask history-mask"></span> Settled Items
     </a>
 
-    <a routerLink="/users" routerLinkActive="active" class="nav-item">
+    <a routerLink="/user-management" routerLinkActive="active" class="nav-item">
       <span class="custom-mask user-mask"></span> User Management
     </a>
   </nav>
 
   <div class="bottom-links">
-    <a href="#" class="nav-item">
-      <span class="custom-mask door-mask"></span> Sign Out
-    </a>
-  </div>
+  <a href="#" class="nav-item" (click)="onSignOut($event)">
+    <span class="custom-mask door-mask"></span> Sign Out
+  </a>
+</div>
 </aside>
