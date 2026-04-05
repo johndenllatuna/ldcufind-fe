@@ -4,11 +4,13 @@ import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard.componen
 import { ItemManagement } from './admin/item-management/item-management.component';
 import { PostItem } from './admin/post-item/post-item.component'; 
 import { ClaimVerification } from './admin/claim-verification/claim-verification.component';
+import { SettledItems } from './admin/settled-items/settled-items.component';
 
 export const routes: Routes = [
   { path: '', component: Login }, 
   { path: 'dashboard', component: AdminDashboard},  
   { path: 'item-management', component: ItemManagement},
   { path: 'claim-verification', component: ClaimVerification },
-  { path: 'post-item', component: PostItem } // 2. Add the route right here
+  { path: 'post-item', component: PostItem },
+  { path: 'settled-items', component: SettledItems },
 ];
