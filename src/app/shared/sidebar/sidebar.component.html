@@ -36,3 +36,17 @@
   </a>
 </div>
 </aside>
+
+@if (showLogoutModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Sign Out</h3>
+      <p>Are you sure you want to leave the admin dashboard?</p>
+      
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="cancelLogout()">Cancel</button>
+        <button class="confirm-btn" (click)="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+}

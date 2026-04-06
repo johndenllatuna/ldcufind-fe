@@ -3,6 +3,16 @@
 <div class="post-item-container">
   <h2 class="page-title">Post Item</h2>
 
+  @if (showSuccessMessage) {
+    <div class="success-toast">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>Item successfully posted to the database!</span>
+    </div>
+  }
+
   <form class="post-item-form" [formGroup]="postItemForm" (ngSubmit)="onSubmit()">
     
     <div class="form-group">
