@@ -104,3 +104,68 @@
 .user-mask        { mask-image: url('/assets/icons/users-icon.svg'); -webkit-mask-image: url('/assets/icons/users-icon.svg'); }
 .door-mask        { mask-image: url('/assets/icons/logout-icon.svg'); -webkit-mask-image: url('/assets/icons/logout-icon.svg'); }
 .history-mask    { mask-image: url('/assets/icons/settled-items-icon.svg'); -webkit-mask-image: url('/assets/icons/settled-items-icon.svg'); }
+
+/* --- CUSTOM LOGOUT MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Higher than the sidebar's 1000 */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  color: #333;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #8a0000;
+  }
+
+  p {
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: #555;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+
+  button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cancel-btn {
+    background-color: #f1f1f1;
+    color: #333;
+
+    &:hover { background-color: #e4e4e4; }
+  }
+
+  .confirm-btn {
+    background-color: #8a0000;
+    color: white;
+
+    &:hover { background-color: #6a0000; }
+  }
+}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; 
 import { ItemService } from '../../services/item.service'; 
@@ -20,12 +20,16 @@ export class PostItem {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   isUploading: boolean = false;
+  
+  // 👇 Added the new success message flag here
+  showSuccessMessage: boolean = false;
 
   // 3. Inject the ImageService
   constructor(
     private fb: FormBuilder, 
     private itemService: ItemService,
-    private imageService: Image 
+    private imageService: Image,
+    private cdr: ChangeDetectorRef
   ) {
     this.postItemForm = this.fb.group({
       name: ['', Validators.required],
@@ -80,9 +84,14 @@ export class PostItem {
 
     this.itemService.addItem(newItem);
     
-    alert('Item successfully posted!');
+    this.showSuccessMessage = true;
     
-    // Reset everything back to default
+    // 3. Update your timeout to explicitly tell Angular to update the screen
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.cdr.detectChanges(); // 👈 Forces the toast to disappear instantly
+    }, 3000);
+    
     this.postItemForm.reset({ date: '2026-01-16' });
     this.selectedFile = null;
     this.imagePreview = null;

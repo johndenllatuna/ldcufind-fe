@@ -10,19 +10,28 @@ import { Auth } from '../../services/auth.service';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
+
 export class Sidebar {
+  // 1. New flag to control the modal visibility
+  showLogoutModal: boolean = false;
+
   constructor(private authService: Auth, private router: Router) {}
 
+  // 2. Instead of a browser confirm, just show our custom modal
   onSignOut(event: Event) {
-    event.preventDefault(); // Stop the <a> tag from refreshing the page
-
-    // 1. Trigger the browser's built-in confirmation popup
-    const wantsToSignOut = window.confirm('Do you want to sign out?');
-
-    // 2. Only log them out IF they clicked "OK"
-    if (wantsToSignOut) {
-      this.authService.logout(); 
-      this.router.navigate(['/admin-login']); 
-    }
+    event.preventDefault(); 
+    this.showLogoutModal = true; 
   }
- }
+
+  // 3. If they click Cancel, just hide the modal
+  cancelLogout() {
+    this.showLogoutModal = false;
+  }
+
+  // 4. If they click Sign Out inside the modal, run the actual logout logic
+  confirmLogout() {
+    this.showLogoutModal = false;
+    this.authService.logout();
+        this.router.navigate(['']); 
+  }
+}
