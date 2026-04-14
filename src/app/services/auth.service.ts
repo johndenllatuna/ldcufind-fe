@@ -8,7 +8,8 @@ export interface User {
   name: string;
   email: string;
   role: 'Student' | 'Admin';
-  isActive: boolean;
+  isActive?: boolean;
+  is_active?: boolean;
   password?: string;
 }
 
