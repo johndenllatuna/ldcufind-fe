@@ -53,8 +53,9 @@ export class UserManagement implements OnInit, AfterViewInit {
     });
   }
 
-  toggleStatus(user: User) {
-    this.authService.toggleUserStatus(user.id);
+  isUserActive(user: any): boolean {
+    if (!user) return false;
+    return user.is_active !== undefined ? user.is_active : !!user.isActive;
   }
 
   isDropdownOpen: boolean = false;
@@ -88,8 +89,25 @@ userToModify: any = null;
 
   confirmAction() {
     if (this.userToModify) {
-      this.authService.toggleUserStatus(this.userToModify.id);
+      this.authService.toggleUserStatus(this.userToModify.id).subscribe({
+        next: () => {
+          // Update the user's status locally
+          const isActiveNow = this.userToModify.is_active !== undefined ? this.userToModify.is_active : this.userToModify.isActive;
+          
+          if (this.userToModify.is_active !== undefined) {
+             this.userToModify.is_active = !isActiveNow;
+          } else {
+             this.userToModify.isActive = !isActiveNow;
+          }
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Error updating user status:', err);
+          this.closeModal();
+        }
+      });
+    } else {
+      this.closeModal();
     }
-    this.closeModal(); // Close the modal after confirming
   }
 }

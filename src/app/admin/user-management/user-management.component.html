@@ -70,9 +70,9 @@
                 <td class="center-align">
                   <button 
                     class="action-btn" 
-                    [class.deactivate]="user.isActive"
-                    [class.activate]="!user.isActive"
-                    (click)="openConfirmModal(user)"> {{ user.isActive ? 'Deactivate' : 'Activate' }}
+                    [class.deactivate]="isUserActive(user)"
+                    [class.activate]="!isUserActive(user)"
+                    (click)="openConfirmModal(user)"> {{ isUserActive(user) ? 'Deactivate' : 'Activate' }}
                   </button>
                 </td>
               </tr>
@@ -120,15 +120,15 @@
         </svg>
       </div>
       <h2 class="deactivate-modal-title">
-        {{ userToModify?.isActive ? 'Deactivate' : 'Activate' }} Account?
+        {{ isUserActive(userToModify) ? 'Deactivate' : 'Activate' }} Account?
       </h2>
       <p class="deactivate-modal-subtext">
-        Are you sure you want to {{ userToModify?.isActive ? 'deactivate' : 'activate' }} this account? This action can be undone later.
+        Are you sure you want to {{ isUserActive(userToModify) ? 'deactivate' : 'activate' }} this account? This action can be undone later.
       </p>
       <div class="deactivate-modal-actions">
         <button class="modal-btn cancel-btn" (click)="closeModal()">Cancel</button>
-        <button class="modal-btn action-btn danger-btn" [class.success-btn]="!userToModify?.isActive" (click)="confirmAction()">
-          {{ userToModify?.isActive ? 'Deactivate' : 'Activate' }}
+        <button class="modal-btn action-btn danger-btn" [class.success-btn]="!isUserActive(userToModify)" (click)="confirmAction()">
+          {{ isUserActive(userToModify) ? 'Deactivate' : 'Activate' }}
         </button>
       </div>
     </div>
