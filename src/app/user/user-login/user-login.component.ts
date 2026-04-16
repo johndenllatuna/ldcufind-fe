@@ -23,7 +23,6 @@ export class UserLogin implements OnInit, OnDestroy {
 
   emailStr = '';
   passwordStr = '';
-  rememberMe = signal(false);
   showPassword = signal(false);
   isLoading = signal(false);
   
