@@ -12,6 +12,12 @@
           <p class="page-subtitle">A record of all successfully verified and resolved claims.</p>
         </header>
 
+        <div class="status-tabs">
+          <button [class.active]="activeTab === 'all'" (click)="setTab('all')">All</button>
+          <button [class.active]="activeTab === 'verified'" (click)="setTab('verified')">Verified</button>
+          <button [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">Rejected</button>
+        </div>
+
         <div class="search-bar">
             <i class="search-mask-icon"></i>
             <input 
@@ -28,6 +34,7 @@
                 <th>Item</th>
                 <th>Claimant</th>
                 <th>Proof</th>
+                <th class="status-header">Status</th>
                 <th class="date-header">Date of claim</th>
                 <th></th>
               </tr>
@@ -62,6 +69,10 @@
                   <td class="proof-cell">
                     <p class="proof-text">{{ claim.proofText }}</p>
                   </td>
+
+                  <td>
+                    <span class="status-badge" [ngClass]="claim.status">{{ claim.status }}</span>
+                  </td>
                   
                   <td>{{ claim.claimDate }}</td>
                   
@@ -72,7 +83,7 @@
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="5" class="empty-state">
+                  <td colspan="6" class="empty-state">
                     <div class="empty-state-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="21 8 21 21 3 21 3 8"></polyline>
