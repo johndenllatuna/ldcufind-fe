@@ -609,11 +609,18 @@ $maroon: #8a0000;
   }
 
   .save-btn {
-    background: #2e7d32;
+    background: #8a0000;
     color: white;
 
     &:hover {
-      background: #246428;
+      background: #6a0000;
+      box-shadow: 0 4px 12px rgba(138, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      box-shadow: none;
     }
   }
 

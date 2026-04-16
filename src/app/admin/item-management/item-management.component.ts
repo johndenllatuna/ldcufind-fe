@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // 👈 1. Added form imports
-import { Item } from '../../models/item.model'; 
-import { ItemService } from '../../services/item.service'; 
+import { Item } from '../../models/item.model';
+import { ItemService } from '../../services/item.service';
 import { Image } from '../../services/image.service'; // 👈 3. Added Image service
-import { Sidebar } from '../../shared/sidebar/sidebar.component'; 
+import { Sidebar } from '../../shared/sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,16 +17,16 @@ import { Subscription } from 'rxjs';
 export class ItemManagement implements OnInit, AfterViewInit {
   // Keep track of our lists
   allItems: Item[] = [];
-  filteredItems: Item[] = []; 
+  filteredItems: Item[] = [];
 
   // --- NEW MODAL STATE VARIABLES ---
-  selectedItem: Item | null = null; 
-  modalMode: 'view' | 'edit' | 'delete' = 'view'; 
+  selectedItem: Item | null = null;
+  modalMode: 'view' | 'edit' | 'delete' = 'view';
   editForm: FormGroup;
   uploadedImageBase64: string | undefined = undefined;
   selectedFile: File | null = null;
-  isDragging: boolean = false; 
-  
+  isDragging: boolean = false;
+
   // --- TOAST FEEDBACK ---
   isToastVisible: boolean = false;
   toastMessage: string = '';
@@ -69,7 +69,7 @@ export class ItemManagement implements OnInit, AfterViewInit {
   // The magic filter method!
   onSearch(event: Event): void {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredItems = this.allItems.filter(item => 
+    this.filteredItems = this.allItems.filter(item =>
       item.name.toLowerCase().includes(searchTerm) ||
       item.description.toLowerCase().includes(searchTerm) ||
       item.location.toLowerCase().includes(searchTerm)
@@ -80,11 +80,11 @@ export class ItemManagement implements OnInit, AfterViewInit {
 
   // Opens the modal and fills the form with the item's current details
   openDetails(item: Item) {
-    this.uploadedImageBase64 = undefined; 
+    this.uploadedImageBase64 = undefined;
     this.selectedFile = null; // Reset for new selection
     this.selectedItem = item;
     this.modalMode = 'view';
-    
+
     // Pre-fill the edit form with formatted date
     this.editForm.patchValue({
       name: item.name,
@@ -137,7 +137,7 @@ export class ItemManagement implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     this.isDragging = false;
-    
+
     const file = event.dataTransfer?.files[0];
     if (file && file.type.startsWith('image/')) {
       this.processFile(file);
@@ -156,9 +156,9 @@ export class ItemManagement implements OnInit, AfterViewInit {
   // Save Edit Logic
   saveChanges() {
     if (this.editForm.valid && this.selectedItem) {
-      const updatedData = { 
-        ...this.selectedItem, 
-        ...this.editForm.value 
+      const updatedData = {
+        ...this.selectedItem,
+        ...this.editForm.value
       };
 
       console.log('Attempting item update with payload:', updatedData);
@@ -187,7 +187,7 @@ export class ItemManagement implements OnInit, AfterViewInit {
     this.itemService.updateItem(updatedData).subscribe({
       next: () => {
         this.showToast('Item updated successfully!');
-        this.changeMode('view');
+        this.closeModal(); // 👈 Automatically close modal on success
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -217,5 +217,5 @@ export class ItemManagement implements OnInit, AfterViewInit {
       });
     }
   }
-  
+
 }
