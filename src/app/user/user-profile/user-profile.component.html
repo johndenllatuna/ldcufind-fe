@@ -25,6 +25,7 @@
         (error)="onAvatarError($event)" />
     </div>
     <div class="profile-hero__info">
+      <div class="avatar-placeholder"></div>
       <h1 class="profile-hero__name">{{ user.name }}</h1>
       <p class="profile-hero__email">{{ user.email }}</p>
       <div class="profile-hero__badge">
@@ -59,7 +60,7 @@
       </div>
 
       <div class="claims-list">
-        @for (claim of myClaims; track claim.id) {
+        @for (claim of myClaims | slice:0:3; track claim.id) {
         <div class="claim-item">
           <div class="claim-item__info">
             <h3 class="claim-item__title">{{ claim.itemName }}</h3>
@@ -94,6 +95,10 @@
         </div>
         }
       </div>
+
+      @if (myClaims.length > 3) {
+        <a class="btn-see-all" routerLink="/user/my-claims">See All</a>
+      }
     </div>
 
     <!-- Settings Card -->

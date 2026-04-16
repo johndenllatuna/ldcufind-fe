@@ -23,6 +23,7 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
   settledClaims: Claim[] = [];
   filteredClaims: Claim[] = [];
   searchTerm: string = '';
+  activeTab: string = 'all';
   selectedItem: Claim | null = null;
   isEditMode: boolean = false;
   tempProofDetails: string = '';
@@ -31,7 +32,7 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
   isDragging: boolean = false; // New state for Drag & Drop feedback
   ngOnInit() {
     this.claimSub = this.claimService.getClaims().subscribe((claims: Claim[]) => {
-      this.settledClaims = claims.filter((claim: Claim) => claim.status === 'verified');
+      this.settledClaims = claims.filter((claim: Claim) => claim.status === 'verified' || claim.status === 'rejected');
       this.filterItems(); // Ensure search filters persist if data hot-reloads
     });
   }
@@ -50,13 +51,23 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  setTab(tab: string) {
+    this.activeTab = tab;
+    this.filterItems();
+  }
+
   filterItems() {
+    let baseClaims = this.settledClaims;
+    if (this.activeTab !== 'all') {
+      baseClaims = this.settledClaims.filter(claim => claim.status === this.activeTab);
+    }
+
     if (!this.searchTerm.trim()) {
-      this.filteredClaims = [...this.settledClaims];
+      this.filteredClaims = [...baseClaims];
       return;
     }
     const term = this.searchTerm.toLowerCase();
-    this.filteredClaims = this.settledClaims.filter(claim => 
+    this.filteredClaims = baseClaims.filter(claim => 
       claim.itemName.toLowerCase().includes(term) || 
       claim.claimantName.toLowerCase().includes(term) ||
       claim.id.toString().toLowerCase().includes(term)
