@@ -266,6 +266,21 @@ $maroon: #8a0000;
       &:hover { background-color: #147236; box-shadow: 0 4px 12px rgba(26, 142, 69, 0.22); }
     }
   }
+
+  .protected-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #94a3b8;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    cursor: not-allowed;
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
 }
 
 /* --- PAGINATION --- */
@@ -409,6 +424,11 @@ $maroon: #8a0000;
   background-color: rgba(211, 47, 47, 0.1); /* Soft red background */
   color: #d32f2f; /* Red icon color */
   margin-bottom: 20px;
+
+  &.activate-icon {
+    background-color: rgba(26, 142, 69, 0.1);
+    color: #1a8e45;
+  }
 }
 
 .deactivate-modal-title {

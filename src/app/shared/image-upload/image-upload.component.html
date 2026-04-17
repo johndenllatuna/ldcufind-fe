@@ -1,0 +1,28 @@
+<div class="upload-zone" 
+     [class.upload-zone--active]="isDragging" 
+     [class.has-image]="imagePreview"
+     (dragover)="onDragOver($event)" 
+     (dragleave)="onDragLeave($event)" 
+     (drop)="onDrop($event)" 
+     (click)="fileInput.click()">
+  
+  <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+
+  @if (imagePreview) {
+    <div class="image-preview-wrapper" (click)="$event.stopPropagation()">
+      <div class="thumbnail-container">
+        <img [src]="imagePreview" alt="Preview" class="preview-thumbnail">
+      </div>
+      <p class="change-text">Click or drag to change image</p>
+      <button type="button" class="remove-image-btn" (click)="removeImage($event)" title="Remove Image">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  } @else {
+    <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+    <p class="upload-text">
+      <span class="highlight">Click to browse</span> or drag and drop
+    </p>
+    <p class="upload-subtext">PNG, JPG, or JPEG (Max 10MB)</p>
+  }
+</div>

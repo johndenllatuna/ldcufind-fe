@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router'; 
 import { Router, RouterModule } from '@angular/router'; 
 import { AuthService } from '../../services/auth.service';
-import { ClaimService } from '../../services/claim.service'; // <-- Import your actual service here
+import { ClaimService } from '../../services/claim.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,12 +20,14 @@ export class Sidebar implements OnInit {
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private claimService: ClaimService // <-- Inject it here
+    private claimService: ClaimService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.claimService.getPendingClaimsCount().subscribe((count: number) => {
       this.pendingClaimsCount = count;
+      this.cdr.detectChanges();
     });
   }
 

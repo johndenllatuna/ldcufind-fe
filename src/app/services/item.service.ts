@@ -2,18 +2,31 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Item } from '../models/item.model';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemService {
   private http = inject(HttpClient);
+  private socketService = inject(SocketService);
   private API_URL = 'http://localhost:3000/api/items';
   
   private itemsSubject = new BehaviorSubject<Item[]>([]);
 
   constructor() {
     this.refreshItems();
+    this.setupSocketListeners();
+  }
+
+  private setupSocketListeners() {
+    this.socketService.onEvent('new_item').subscribe(() => {
+      this.refreshItems();
+    });
+
+    this.socketService.onEvent('item_updated').subscribe(() => {
+      this.refreshItems();
+    });
   }
 
   // Refresh the local subject from the backend

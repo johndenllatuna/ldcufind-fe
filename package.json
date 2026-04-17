@@ -18,13 +18,16 @@
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
     "chart.js": "^4.5.1",
+    "flatpickr": "^4.6.13",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
+    "@types/flatpickr": "^3.0.2",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

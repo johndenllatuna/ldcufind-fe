@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // 👈 1. Added form imports
 import { Item } from '../../models/item.model';
@@ -6,11 +6,12 @@ import { ItemService } from '../../services/item.service';
 import { Image } from '../../services/image.service'; // 👈 3. Added Image service
 import { Sidebar } from '../../shared/sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
+import { ImageUploadComponent } from '../../shared/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-item-management',
   standalone: true,
-  imports: [CommonModule, Sidebar, ReactiveFormsModule], // 👈 2. Added ReactiveFormsModule here
+  imports: [CommonModule, Sidebar, ReactiveFormsModule, ImageUploadComponent], // 👈 Added ImageUploadComponent
   templateUrl: './item-management.component.html',
   styleUrls: ['./item-management.component.scss']
 })
@@ -25,7 +26,6 @@ export class ItemManagement implements OnInit, AfterViewInit {
   editForm: FormGroup;
   uploadedImageBase64: string | undefined = undefined;
   selectedFile: File | null = null;
-  isDragging: boolean = false;
 
   // --- TOAST FEEDBACK ---
   isToastVisible: boolean = false;
@@ -39,6 +39,7 @@ export class ItemManagement implements OnInit, AfterViewInit {
   private imageService = inject(Image); // 👈 5. Injected Image service
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   constructor() {
     // Setup the edit form rules
@@ -54,26 +55,37 @@ export class ItemManagement implements OnInit, AfterViewInit {
     // Fetch the data when the page loads
     this.itemService.getItems().subscribe(items => {
       this.allItems = items;
-      this.filteredItems = items; // Initially, show everything
+      this.applyFilters();
     });
   }
 
   ngAfterViewInit(): void {
-    // setTimeout runs in the next macro-task, ensuring the DOM is fully painted with the 'is-entering' state first.
     setTimeout(() => {
       this.pageEntered = true;
-      this.cdr.detectChanges(); // Force Angular to evaluate [class.is-entered] immediately
+      this.cdr.detectChanges(); 
     }, 50);
   }
 
-  // The magic filter method!
   onSearch(event: Event): void {
-    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredItems = this.allItems.filter(item =>
-      item.name.toLowerCase().includes(searchTerm) ||
-      item.description.toLowerCase().includes(searchTerm) ||
-      item.location.toLowerCase().includes(searchTerm)
-    );
+    this.applyFilters((event.target as HTMLInputElement).value);
+  }
+
+  private applyFilters(searchTerm: string = ''): void {
+    const term = searchTerm.toLowerCase().trim();
+    
+    // Only show available items in Item Management
+    const availableItems = this.allItems.filter(item => item.status === 'Available');
+
+    if (!term) {
+      this.filteredItems = [...availableItems];
+    } else {
+      this.filteredItems = availableItems.filter(item =>
+        item.name.toLowerCase().includes(term) ||
+        item.description.toLowerCase().includes(term) ||
+        item.location.toLowerCase().includes(term)
+      );
+    }
+    this.cdr.detectChanges();
   }
 
   // --- NEW MODAL METHODS ---
@@ -114,43 +126,9 @@ export class ItemManagement implements OnInit, AfterViewInit {
     this.modalMode = mode;
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.processFile(file);
-    }
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-
-    const file = event.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) {
-      this.processFile(file);
-    }
-  }
-
-  private processFile(file: File) {
-    this.selectedFile = file; // Store the actual file for uploading later
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.uploadedImageBase64 = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  onImageChanged(file: File | null) {
+    this.selectedFile = file;
+    if (!file) this.uploadedImageBase64 = undefined;
   }
 
   // Save Edit Logic

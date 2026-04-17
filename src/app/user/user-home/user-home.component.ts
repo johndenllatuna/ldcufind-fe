@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Item } from '../../models/item.model';
 import { ItemService } from '../../services/item.service';
+import { SocketService } from '../../services/socket.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -35,7 +36,7 @@ export class UserHome implements OnInit, OnDestroy {
   fetchItems() {
     this.itemSub = this.itemService.getItems().subscribe(items => {
       this.allItems = items;
-      this.filteredItems = items;
+      this.searchItems(); // Re-apply search filters
       this.cdr.detectChanges();
     });
   }
@@ -54,9 +55,7 @@ export class UserHome implements OnInit, OnDestroy {
   }
 
   onSearchInput() {
-    if (!this.searchQuery.trim()) {
-      this.filteredItems = [...this.allItems];
-    }
+    this.searchItems();
   }
 
   onImageError(event: Event) {
@@ -65,13 +64,19 @@ export class UserHome implements OnInit, OnDestroy {
   }
 
   searchItems() {
+    // Only show available items to regular users
+    const availableItems = this.allItems.filter(item => {
+      const status = (item.status || 'Available').toLowerCase();
+      return status === 'available';
+    });
+    
     const query = this.searchQuery.toLowerCase().trim();
     if (!query) {
-      this.filteredItems = [...this.allItems];
+      this.filteredItems = [...availableItems];
       return;
     }
 
-    this.filteredItems = this.allItems.filter((item) =>
+    this.filteredItems = availableItems.filter((item) =>
       item.name.toLowerCase().includes(query) ||
       item.location.toLowerCase().includes(query) ||
       item.description.toLowerCase().includes(query)

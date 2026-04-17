@@ -67,7 +67,7 @@ export class UserLogin implements OnInit, OnDestroy {
 
   handleLogin() {
     if (!this.emailStr || !this.passwordStr) {
-      this.triggerToast();
+      this.triggerToast('Please enter your email and password.');
       return;
     }
 
@@ -84,13 +84,20 @@ export class UserLogin implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.triggerToast();
+
+        // 403 = account deactivated — show the global deactivation modal
+        if (err.status === 403) {
+          this.authService.deactivationModalMode.set('continue');
+          this.authService.showDeactivationModal.set(true);
+        } else {
+          this.triggerToast('Invalid email or password.');
+        }
         console.error('Login failed:', err);
       }
     });
   }
 
-  private triggerToast() {
+  private triggerToast(message?: string) {
     this.showToast.set(true);
     // Auto-dismiss after 4 seconds
     setTimeout(() => {

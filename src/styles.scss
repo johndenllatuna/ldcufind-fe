@@ -1,6 +1,214 @@
 /* --- GOOGLE FONTS & MATERIAL SYMBOLS --- */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+@import 'flatpickr/dist/flatpickr.min.css';
+
+/* --- FLATPICKR MAROON THEME --- */
+.flatpickr-calendar {
+  box-shadow: 0 16px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  font-family: 'Inter', sans-serif !important;
+  overflow: hidden;
+  width: 320px !important;
+}
+
+/* ── Month header bar ── */
+.flatpickr-months {
+  background: #8a0000 !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 14px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  color: rgba(255,255,255,0.85) !important;
+  fill: rgba(255,255,255,0.85) !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  transition: background 0.18s ease !important;
+
+  &:hover {
+    background: rgba(255,255,255,0.15) !important;
+    color: white !important;
+    fill: white !important;
+
+    svg { fill: white !important; }
+  }
+}
+
+/* ── Month + Year container ── */
+.flatpickr-current-month {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  font-size: 0.97rem !important;
+  font-weight: 700 !important;
+  color: white !important;
+  padding: 0 !important;
+  width: auto !important;
+  position: static !important;
+  left: unset !important;
+
+  /* Month dropdown select */
+  .flatpickr-monthDropdown-months {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background: rgba(255,255,255,0.18) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    padding: 5px 28px 5px 12px !important;
+    cursor: pointer !important;
+    transition: background 0.18s ease !important;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+    background-repeat: no-repeat !important;
+    background-position: right 6px center !important;
+    background-size: 18px !important;
+
+    &:hover {
+      background-color: rgba(255,255,255,0.28) !important;
+    }
+
+    &:focus {
+      outline: none !important;
+      background-color: rgba(255,255,255,0.28) !important;
+    }
+
+    option {
+      background: #8a0000 !important;
+      color: white !important;
+      font-weight: 600 !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+  }
+
+  /* Year — hide native input, show custom select injected via JS */
+  .numInputWrapper {
+    border-radius: 8px !important;
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+
+    input.cur-year {
+      display: none !important;  /* Hidden — replaced by .fp-year-select */
+    }
+
+    .arrowUp, .arrowDown { display: none !important; }
+  }
+}
+
+/* Custom year <select> injected by JS */
+.fp-year-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: rgba(255,255,255,0.18) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  padding: 5px 28px 5px 12px !important;
+  cursor: pointer !important;
+  transition: background 0.18s ease !important;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+  background-repeat: no-repeat !important;
+  background-position: right 6px center !important;
+  background-size: 18px !important;
+
+  &:hover { background-color: rgba(255,255,255,0.28) !important; }
+  &:focus { outline: none !important; background-color: rgba(255,255,255,0.28) !important; }
+
+  option {
+    background: #700000 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+}
+
+/* ── Weekday header ── */
+.flatpickr-weekdays {
+  background: #8a0000 !important;
+  padding-bottom: 6px !important;
+}
+
+span.flatpickr-weekday {
+  background: #8a0000 !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-weight: 600 !important;
+  font-size: 0.78rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ── Days grid ── */
+.flatpickr-days,
+.dayContainer {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  padding: 4px 8px 8px !important;
+}
+
+.flatpickr-day {
+  border-radius: 8px !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
+  font-size: 0.87rem !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  max-width: 36px !important;
+  flex-basis: 36px !important;
+  margin: 2px !important;
+
+  &:hover, &:focus {
+    background: #f1f5f9 !important;
+    border-color: #f1f5f9 !important;
+  }
+
+  &.selected,
+  &.startRange,
+  &.endRange {
+    background: #8a0000 !important;
+    border-color: #8a0000 !important;
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 10px rgba(138,0,0,0.3) !important;
+  }
+
+  &.today {
+    border-color: #8a0000 !important;
+    font-weight: 700 !important;
+    color: #8a0000 !important;
+
+    &:hover, &:focus {
+      border-color: #8a0000 !important;
+      background: #fff5f5 !important;
+      color: #8a0000 !important;
+    }
+  }
+
+  &.flatpickr-disabled,
+  &.prevMonthDay,
+  &.nextMonthDay {
+    color: #cbd5e1 !important;
+    opacity: 0.5 !important;
+  }
+}
+
+/* ── Arrow pointer ── */
+.flatpickr-calendar.arrowTop:before { border-bottom-color: #8a0000 !important; }
+.flatpickr-calendar.arrowTop:after  { border-bottom-color: #8a0000 !important; }
+.flatpickr-calendar.arrowBottom:before { border-top-color: #ffffff !important; }
+
 
 /* --- GLOBAL FONT & RESET --- */
 * {

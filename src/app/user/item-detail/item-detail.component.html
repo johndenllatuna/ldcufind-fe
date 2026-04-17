@@ -178,27 +178,7 @@
     <!-- Optional Image Attachment -->
     <div class="modal-field">
       <label class="modal-field__label">Attach Image (Optional)</label>
-      <div class="inquiry-upload-zone" [class.inquiry-upload-zone--active]="isDragging" (dragover)="onDragOver($event)"
-        (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
-        <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
-
-        @if (imagePreview) {
-        <div class="inquiry-preview-container">
-          <img [src]="imagePreview" alt="Proof preview">
-        </div>
-        <p class="upload-subtext">Click or drag to change</p>
-        } @else {
-        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-          <polyline points="21 15 16 10 5 21"></polyline>
-          <line x1="12" y1="12" x2="12" y2="18"></line>
-          <line x1="9" y1="15" x2="15" y2="15"></line>
-        </svg>
-        <p class="upload-text">Drag & Drop or <span class="upload-browse">browse</span></p>
-        }
-      </div>
+      <app-image-upload (imageChanged)="onImageChanged($event)"></app-image-upload>
     </div>
 
     <!-- Proof of Ownership -->

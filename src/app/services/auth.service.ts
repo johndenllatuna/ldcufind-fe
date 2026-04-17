@@ -27,7 +27,11 @@ export class AuthService {
   // Stateful signal for the current session
   currentUser = signal<User | null>(this.loadSession());
 
-  constructor() {}
+  // Deactivation modal state — raised by AppComponent (real-time) or login (blocked)
+  showDeactivationModal = signal(false);
+  deactivationModalMode = signal<'logout' | 'continue'>('logout');
+
+  constructor() { }
 
   private loadSession(): User | null {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -114,4 +118,4 @@ export class AuthService {
       })
     );
   }
-}
+}

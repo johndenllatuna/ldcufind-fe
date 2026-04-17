@@ -1,9 +1,11 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebar } from '../../shared/sidebar/sidebar.component';
 import { Chart, registerables } from 'chart.js';
 import { DashboardStats } from '../../models/dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
+import { SocketService } from '../../services/socket.service';
+import { Subscription } from 'rxjs';
 
 Chart.register(...registerables);
 

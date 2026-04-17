@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap, of } from 'rxjs';
+import { SocketService } from './socket.service';
 
 export interface Claim {
   id: string | number;
@@ -21,12 +22,26 @@ export interface Claim {
 })
 export class ClaimService {
   private http = inject(HttpClient);
+  private socketService = inject(SocketService);
   private API_URL = 'http://localhost:3000/api/claims';
   
   private claimsSubject = new BehaviorSubject<Claim[]>([]);
 
   constructor() {
     this.refreshClaims();
+    this.setupSocketListeners();
+  }
+
+  private setupSocketListeners() {
+    // Refresh claims whenever a new one is submitted anywhere
+    this.socketService.onEvent('new_claim').subscribe(() => {
+      this.refreshClaims();
+    });
+
+    // Refresh claims whenever a status is updated
+    this.socketService.onEvent('claim_status_updated').subscribe(() => {
+      this.refreshClaims();
+    });
   }
 
   refreshClaims() {

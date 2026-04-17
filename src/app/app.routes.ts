@@ -8,6 +8,7 @@ import { PostItem } from './admin/post-item/post-item.component';
 import { ClaimVerification } from './admin/claim-verification/claim-verification.component';
 import { SettledItems } from './admin/settled-items/settled-items.component';
 import { UserManagement } from './admin/user-management/user-management.component';
+import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
 
 // ── User ───────────────────────────────────────────────────────────────────────
 import { UserLogin } from './user/user-login/user-login.component';
@@ -28,12 +29,18 @@ export const routes: Routes = [
 
   // ── Admin routes ─────────────────────────────────────────────────────────────
   { path: 'admin-login', component: AdminLogin },
-  { path: 'admin-dashboard', component: AdminDashboard },
-  { path: 'item-management', component: ItemManagement },
-  { path: 'claim-verification', component: ClaimVerification },
-  { path: 'post-item', component: PostItem },
-  { path: 'settled-items', component: SettledItems },
-  { path: 'user-management', component: UserManagement },
+  { 
+    path: '', 
+    component: AdminLayoutComponent,
+    children: [
+      { path: 'admin-dashboard', component: AdminDashboard },
+      { path: 'item-management', component: ItemManagement },
+      { path: 'claim-verification', component: ClaimVerification },
+      { path: 'post-item', component: PostItem },
+      { path: 'settled-items', component: SettledItems },
+      { path: 'user-management', component: UserManagement },
+    ]
+  },
 
   // ── User routes ───────────────────────────────────────────────────────────────
   { path: 'user/login', component: UserLogin },

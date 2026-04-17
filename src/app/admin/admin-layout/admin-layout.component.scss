@@ -1,0 +1,17 @@
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #fafafa;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 32px;
+  box-sizing: border-box;
+  width: calc(100% - 260px);
+  background-color: #f4f5f8;
+  min-height: 100vh;
+  overflow-y: auto;
+}

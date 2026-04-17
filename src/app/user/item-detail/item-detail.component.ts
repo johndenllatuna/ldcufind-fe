@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,8 @@ import { Image } from '../../services/image.service';
 import { AuthService } from '../../services/auth.service';
 import { Item } from '../../models/item.model';
 import { Observable, of, combineLatest } from 'rxjs';
-import { switchMap, catchError, map, startWith } from 'rxjs/operators';
+import { switchMap, catchError, map, startWith, tap } from 'rxjs/operators';
+import { ImageUploadComponent } from '../../shared/image-upload/image-upload.component';
 
 interface ItemDetailVm {
   isLoading: boolean;
@@ -22,7 +23,7 @@ interface ItemDetailVm {
 @Component({
   selector: 'app-item-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ImageUploadComponent],
   templateUrl: './item-detail.component.html',
   styleUrls: ['./item-detail.component.scss'],
 })
@@ -32,19 +33,20 @@ export class ItemDetail {
   private imageService = inject(Image);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private ngZone = inject(NgZone);
 
   showClaimModal = false;
   showSuccessModal = false;
   proofText = '';
-  
-  isDragging = false;
+
   imagePreview: string | undefined = undefined;
   selectedFile: File | undefined = undefined;
 
+  private router = inject(Router);
+  
   vm$: Observable<ItemDetailVm> = this.route.params.pipe(
     map(params => +params['id']),
     switchMap(id => {
-      // Validate ID
       if (!id) {
         return of({
           isLoading: false,
@@ -56,31 +58,22 @@ export class ItemDetail {
         });
       }
 
-      // Fetch Item
-      const item$ = this.itemService.getItemById(id).pipe(
-        map((data: any) => {
-          const itemObj = data?.data ? data.data : data;
-          if (!itemObj || typeof itemObj !== 'object' || Object.keys(itemObj).length === 0) {
-            throw new Error('Item not found in database.');
-          }
+      // Fetch Item reactively from the global items list
+      const item$ = this.itemService.getItems().pipe(
+        map(items => items.find(i => i.id === id)),
+        map(item => {
+          if (!item) return null;
+          const anyItem = item as any;
           return {
-            ...itemObj,
-            id: Number(itemObj.id),
-            imageUrl: itemObj.imageUrl || itemObj.image_url || '/assets/icons/no-img.svg'
+            ...item,
+            imageUrl: anyItem.imageUrl || anyItem.image_url || '/assets/icons/no-img.svg'
           } as Item;
-        }),
-        catchError(err => {
-          console.error('ItemDetail: API Error =', err);
-          return of(null);
         })
       );
 
-      // Fetch Claims
-      const claims$ = this.claimService.getClaims().pipe(
-        catchError(() => of([] as Claim[]))
-      );
+      // Fetch Claims reactively
+      const claims$ = this.claimService.getClaims();
 
-      // Combine streams
       return combineLatest([item$, claims$]).pipe(
         map(([item, claims]) => {
           if (!item) {
@@ -119,6 +112,14 @@ export class ItemDetail {
             userHasRejectedClaim
           };
         }),
+        tap((vm: ItemDetailVm) => {
+          // If the item is no longer Available (e.g., approved/settled), redirect home
+          if (vm.item && vm.item.status && vm.item.status.toLowerCase() !== 'available') {
+            this.ngZone.run(() => {
+              this.router.navigate(['/user/home']);
+            });
+          }
+        }),
         startWith({
           isLoading: true,
           errorMessage: null,
@@ -136,40 +137,9 @@ export class ItemDetail {
     img.style.display = 'none';
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) this.processFile(file);
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-    const file = event.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) {
-      this.processFile(file);
-    }
-  }
-
-  private processFile(file: File) {
-    this.selectedFile = file;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  onImageChanged(file: File | null) {
+    this.selectedFile = file || undefined;
+    if (!file) this.imagePreview = undefined;
   }
 
   submitClaim(item: Item) {
@@ -230,3 +200,4 @@ export class ItemDetail {
     this.showSuccessModal = false;
   }
 }
+

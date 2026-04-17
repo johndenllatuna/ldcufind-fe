@@ -1,7 +1,3 @@
-<div class="dashboard-layout">
-  <app-sidebar></app-sidebar>
-  <main class="main-content">
-
     <!-- ── Hardware-Accelerated Page Transition Wrapper ── -->
     <div id="page-content" class="page-transition-wrapper" [class.is-entering]="!pageEntered"
       [class.is-entered]="pageEntered">
@@ -54,7 +50,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
-                  <span>{{ item.date }}</span>
+                  <span>{{ item.date | date: 'MMM d, y' }}</span>
                 </div>
               </div>
             </div>
@@ -73,8 +69,6 @@
       </div>
 
     </div>
-  </main>
-</div>
 
 <!-- ── Existing Modal Logic Remains Untouched ── -->
 @if (selectedItem) {
@@ -100,11 +94,7 @@
             </div>
             <div class="meta-item">
               <span class="meta-icon calendar-icon"></span>
-              <span><strong>Date:</strong> {{ selectedItem.date }}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-icon label-icon"></span>
-              <span><strong>Status:</strong> {{ selectedItem.status }}</span>
+              <span><strong>Date:</strong> {{ selectedItem.date | date: 'MMM d, y' }}</span>
             </div>
           </div>
         </div>
@@ -143,22 +133,7 @@
         <input type="date" formControlName="date">
 
         <div class="image-upload-section">
-          @if (uploadedImageBase64) {
-          <div class="image-preview-wrapper">
-            <img [src]="uploadedImageBase64" alt="Item Preview" class="preview-img">
-          </div>
-          }
-
-          <div class="upload-zone" [class.upload-zone--active]="isDragging" (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
-            <span class="material-symbols-outlined upload-icon">cloud_upload</span>
-            <p class="upload-text">
-              <span class="highlight">Click to browse</span> or drag and drop
-            </p>
-            <p class="upload-subtext">PNG, JPG, or JPEG (Max 10MB)</p>
-
-            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
-          </div>
+          <app-image-upload (imageChanged)="onImageChanged($event)" [initialPreview]="selectedItem?.imageUrl"></app-image-upload>
         </div>
       </form>
     </div>

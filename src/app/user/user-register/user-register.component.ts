@@ -78,8 +78,13 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (!this.emailStr.toLowerCase().endsWith('@liceo.edu.ph')) {
+      this.triggerToast('Only @liceo.edu.ph emails are allowed');
+      return;
+    }
+
     if (this.passwordStr !== this.confirmPasswordStr) {
-      alert('Passwords do not match');
+      this.triggerToast('Passwords do not match');
       return;
     }
 

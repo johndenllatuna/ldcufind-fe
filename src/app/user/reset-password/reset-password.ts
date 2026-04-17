@@ -20,6 +20,9 @@ export class ResetPasswordComponent implements OnInit {
 
   showNewPassword = signal(false);
   showConfirmPassword = signal(false);
+  showToast = signal(false);
+  errorMessage = signal('');
+  isLoading = signal(false);
 
   toggleNewPasswordVisibility() {
     this.showNewPassword.set(!this.showNewPassword());
@@ -27,6 +30,14 @@ export class ResetPasswordComponent implements OnInit {
 
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword.set(!this.showConfirmPassword());
+  }
+
+  private triggerToast(message: string) {
+    this.errorMessage.set(message);
+    this.showToast.set(true);
+    setTimeout(() => {
+      this.showToast.set(false);
+    }, 4000);
   }
 
   constructor(
@@ -42,16 +53,16 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.newPassword || !this.confirmPassword) {
+    if (!this.newPassword || !this.confirmPassword || this.isLoading()) {
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      this.passwordMismatch = true;
+      this.triggerToast('Passwords do not match');
       return;
     }
 
-    this.passwordMismatch = false;
+    this.isLoading.set(true);
 
     const payload = {
       token: this.token,
@@ -60,12 +71,14 @@ export class ResetPasswordComponent implements OnInit {
 
     this.authService.resetPassword(payload).subscribe({
       next: (response) => {
+        this.isLoading.set(false);
         this.successMode = true;
-        // The template shows a success message with a link to login
       },
       error: (err) => {
+        this.isLoading.set(false);
         console.error('Reset password error:', err);
-        alert(err?.error?.message || 'Failed to reset password. The link may be invalid or expired.');
+        const msg = err?.error?.message || 'Failed to reset password. The link may be invalid or expired.';
+        this.triggerToast(msg);
       }
     });
   }

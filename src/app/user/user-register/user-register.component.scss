@@ -285,6 +285,12 @@ $outline-variant:       #e2bfb9;
   &--with-action {
     padding-right: 44px;
   }
+
+  /* Hide native browser reveal button (Edge/IE) to avoid duplication with custom icon */
+  &::-ms-reveal,
+  &::-ms-clear {
+    display: none;
+  }
 }
 
 .field-action-btn {
@@ -401,6 +407,62 @@ $outline-variant:       #e2bfb9;
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════
+   TOAST NOTIFICATION
+   (Matches Design: White bg, Maroon left-border)
+   ═══════════════════════════════════════ */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-left: 5px solid $maroon;
+  border-radius: 14px;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.12),
+    0 4px 10px rgba(0, 0, 0, 0.06);
+  max-width: 400px;
+  width: calc(100% - 48px);
+  pointer-events: auto;
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: $maroon;
+  }
+
+  &__message {
+    margin: 0;
+    color: $slate-dark;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+}
+
+.animate-slide-down {
+  animation: 
+    toastSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    toastFadeIn    0.45s ease;
+}
+
+@keyframes toastSlideDown {
+  from { transform: translateX(-50%) translateY(-20px); }
+  to   { transform: translateX(-50%) translateY(0);     }
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 

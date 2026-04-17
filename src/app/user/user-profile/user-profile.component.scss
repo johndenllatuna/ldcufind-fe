@@ -119,63 +119,127 @@ $nav-blur-bg: rgba(255, 255, 255, 0.82);
   padding: 36px 24px 28px;
   background: $surface-card;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  gap: 18px;
-
-  /* Crisp inner-top edge shadow to create depth from the grey background */
+  gap: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-
-  .avatar-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: #e0e0e0;
-    margin-bottom: 16px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Added a subtle inner shadow for a cleaner look */
-  }
-
-  &__info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    text-align: center;
-  }
-
-  &__name-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 38px;
-  }
-
-  &__name {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: $slate-dark;
-    letter-spacing: -0.5px;
-    margin: 0;
-  }
-
-  &__edit-mode {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  &__email {
-    margin: 0;
-    font-size: 0.84rem;
-    font-weight: 500;
-    color: $slate-light;
-  }
-
-
 }
+
+/* ── Avatar ── */
+.avatar-wrap {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover .avatar-overlay {
+    opacity: 1;
+  }
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.camera-icon {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.upload-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.avatar-wrap--uploading {
+  cursor: wait;
+  .avatar-overlay { opacity: 1; }
+}
+
+.avatar-initials {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, $maroon-mid, $maroon-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  box-shadow:
+    0 8px 24px rgba($maroon, 0.30),
+    0 2px 6px rgba(0, 0, 0, 0.10);
+  user-select: none;
+}
+
+.avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 8px 24px rgba($maroon, 0.20),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Info block ── */
+.profile-hero__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.profile-hero__name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.profile-hero__name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: $slate-dark;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.profile-hero__email {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: $slate-light;
+}
+
 
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
@@ -634,23 +698,44 @@ $nav-blur-bg: rgba(255, 255, 255, 0.82);
   gap: 14px;
   text-align: center;
   box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
-  animation: sheetUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translateY(0);
+  opacity: 1;
+  animation: sheetUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Drag handle pill at the very top */
-  &::before {
+  /* Removed the ::before handle, moved to a dedicated div for hit area */
+}
+
+.modal-content--draggable {
+  touch-action: none; /* Prevent browser from scrolling the background, allowing scripts to capture drag */
+  will-change: transform;
+}
+
+.modal-drag-handle {
+  width: 100%;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  touch-action: none; /* Prevent default scroll when dragging the handle */
+  margin-top: -8px;
+
+  &::after {
     content: '';
     display: block;
-    width: 40px;
-    height: 4px;
-    border-radius: 2px;
-    background: #e2e8f0;
-    flex-shrink: 0;
-    margin-bottom: 4px;
+    width: 48px;
+    height: 5px;
+    border-radius: 3px;
+    background: #cbd5e1;
+  }
+
+  &:active {
+    cursor: grabbing;
   }
 }
 
 @keyframes sheetUp {
-  from { transform: translateY(30px); opacity: 0; }
+  from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 
@@ -755,54 +840,109 @@ $nav-blur-bg: rgba(255, 255, 255, 0.82);
   }
 }
 
-.name-edit-input {
-  font-family: 'Manrope', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: $slate-dark;
-  padding: 6px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  outline: none;
-  width: 160px;
-  text-align: center;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.profile-hero__edit-mode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 
-  &:focus {
-    border-color: $maroon;
-    box-shadow: 0 0 0 3px rgba($maroon, 0.1);
+.edit-pill {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 4px 6px 4px 18px;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  animation: pillPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &:focus-within {
+    box-shadow: 
+      0 12px 32px rgba(138, 0, 0, 0.12),
+      0 0 0 3px rgba(138, 0, 0, 0.08);
+    transform: translateY(-2px);
+    border-color: rgba(138, 0, 0, 0.2);
   }
 }
 
-.btn-edit-action {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+@keyframes pillPop {
+  from { opacity: 0; transform: scale(0.92) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.name-edit-input {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: $slate-dark;
+  background: transparent;
   border: none;
-  transition: background 0.2s ease, transform 0.1s ease;
+  outline: none;
+  width: 140px;
+  min-width: 100px;
+  max-width: 180px;
+  padding: 0;
+  margin-right: 12px;
+  text-align: left;
+  letter-spacing: -0.3px;
+
+  &::placeholder {
+    color: $slate-light;
+    font-weight: 600;
+  }
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-edit-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
   }
 
   &.btn-edit-save {
     background: $maroon;
     color: white;
+    box-shadow: 0 4px 10px rgba($maroon, 0.3);
 
     &:hover {
       background: $maroon-mid;
+      box-shadow: 0 6px 14px rgba($maroon, 0.4);
+      transform: translateY(-1px);
     }
   }
 
   &.btn-edit-cancel {
-    background: #e2e8f0;
-    color: $slate-dark;
+    background: #f1f5f9;
+    color: $slate-mid;
 
     &:hover {
-      background: #cbd5e1;
+      background: #e2e8f0;
+      color: $slate-dark;
+      transform: translateY(-1px);
     }
   }
-}
+}

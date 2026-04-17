@@ -3,6 +3,8 @@ import { Sidebar } from '../../shared/sidebar/sidebar.component';
 import { ClaimService, Claim } from '../../services/claim.service'; 
 import { ItemService } from '../../services/item.service';
 import { CommonModule } from '@angular/common';
+import { SocketService } from '../../services/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-claim-verification',
@@ -26,12 +28,17 @@ export class ClaimVerification implements OnInit, OnDestroy, AfterViewInit {
   selectedClaim: Claim | null = null;
   isViewingImage: boolean = false; // NEW: Toggle between details and image view
 
-  private claimSub: any;
+  private claimSub: Subscription | null = null;
 
   ngOnInit() {
+    this.fetchClaims();
+  }
+
+  fetchClaims() {
     this.claimSub = this.claimService.getClaims().subscribe((claims: Claim[]) => {
       this.allClaims = claims.filter(c => c.status === 'pending');
       this.filteredClaims = [...this.allClaims];
+      this.cdr.detectChanges();
     });
   }
 
@@ -81,21 +88,18 @@ export class ClaimVerification implements OnInit, OnDestroy, AfterViewInit {
 
   approveClaim() {
     if (this.selectedClaim) {
-      // 1. Update the claim status
-      this.claimService.updateClaimStatus(this.selectedClaim.id, 'verified').subscribe({
+      const claimId = this.selectedClaim.id;
+      
+      console.log(`[DEBUG] Approving claim ${claimId}`);
+
+      // Update the claim status (Backend will automatically mark item as Settled)
+      this.claimService.updateClaimStatus(claimId, 'verified').subscribe({
         next: () => {
-          // 2. Mark the associated item as Settled
-          if (this.selectedClaim?.itemId) {
-            this.itemService.getItemById(this.selectedClaim.itemId).subscribe(item => {
-              if (item) {
-                this.itemService.updateItem({ ...item, status: 'Settled' }).subscribe();
-              }
-            });
-          }
+          console.log(`[DEBUG] Claim ${claimId} approved successfully`);
           this.closeModal();
           this.cdr.detectChanges();
         },
-        error: (err) => console.error('Failed to approve claim:', err)
+        error: (err) => console.error(`[DEBUG] Failed to approve claim ${claimId}:`, err)
       });
     }
   }

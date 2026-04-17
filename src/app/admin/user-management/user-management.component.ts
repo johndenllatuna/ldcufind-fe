@@ -20,7 +20,7 @@ export class UserManagement implements OnInit, AfterViewInit {
 
   allUsers: User[] = [];
   filteredUsers: User[] = [];
-  
+
   // Filter states
   searchTerm: string = '';
   selectedRole: string = 'All Roles';
@@ -43,9 +43,9 @@ export class UserManagement implements OnInit, AfterViewInit {
   applyFilters() {
     this.filteredUsers = this.allUsers.filter(user => {
       // 1. Check Search Term
-      const matchesSearch = user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
-                            user.email.toLowerCase().includes(this.searchTerm.toLowerCase());
-      
+      const matchesSearch = user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchTerm.toLowerCase());
+
       // 2. Check Role Dropdown
       const matchesRole = this.selectedRole === 'All Roles' || user.role === this.selectedRole;
 
@@ -59,24 +59,24 @@ export class UserManagement implements OnInit, AfterViewInit {
   }
 
   isDropdownOpen: boolean = false;
-roles: string[] = ['All Roles', 'Student', 'Admin'];
+  roles: string[] = ['All Roles', 'Student', 'Admin'];
 
 
-// Add these methods to handle the custom dropdown
-toggleDropdown() {
-  this.isDropdownOpen = !this.isDropdownOpen;
-}
+  // Add these methods to handle the custom dropdown
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
 
-selectRole(role: string) {
-  this.selectedRole = role;
-  this.isDropdownOpen = false; // Close menu after selecting
-  this.applyFilters();
-}
+  selectRole(role: string) {
+    this.selectedRole = role;
+    this.isDropdownOpen = false; // Close menu after selecting
+    this.applyFilters();
+  }
 
-showConfirmModal: boolean = false;
-userToModify: any = null;
+  showConfirmModal: boolean = false;
+  userToModify: any = null;
 
-// --- NEW METHODS FOR MODAL ---
+  // --- NEW METHODS FOR MODAL ---
   openConfirmModal(user: any) {
     this.userToModify = user;
     this.showConfirmModal = true;
@@ -93,11 +93,11 @@ userToModify: any = null;
         next: () => {
           // Update the user's status locally
           const isActiveNow = this.userToModify.is_active !== undefined ? this.userToModify.is_active : this.userToModify.isActive;
-          
+
           if (this.userToModify.is_active !== undefined) {
-             this.userToModify.is_active = !isActiveNow;
+            this.userToModify.is_active = !isActiveNow;
           } else {
-             this.userToModify.isActive = !isActiveNow;
+            this.userToModify.isActive = !isActiveNow;
           }
           this.closeModal();
         },

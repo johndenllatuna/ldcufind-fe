@@ -29,19 +29,27 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
   tempProofDetails: string = '';
   selectedFile: File | null = null;
   tempImageUrl: string | ArrayBuffer | null = null; 
-  isDragging: boolean = false; // New state for Drag & Drop feedback
+  isDragging: boolean = false; 
+  isSaving: boolean = false;
+
+  get hasChanges(): boolean {
+    if (!this.selectedItem) return false;
+    const proofChanged = this.tempProofDetails !== this.selectedItem.proofText;
+    const imageChanged = !!this.selectedFile;
+    return proofChanged || imageChanged;
+  }
+
   ngOnInit() {
     this.claimSub = this.claimService.getClaims().subscribe((claims: Claim[]) => {
       this.settledClaims = claims.filter((claim: Claim) => claim.status === 'verified' || claim.status === 'rejected');
-      this.filterItems(); // Ensure search filters persist if data hot-reloads
+      this.filterItems(); 
     });
   }
 
   ngAfterViewInit() {
-    // Trigger entrance animation cleanly
     setTimeout(() => {
       this.pageEntered = true;
-      this.cdr.detectChanges(); // Force Angular to evaluate [class.is-entered] immediately
+      this.cdr.detectChanges(); 
     }, 50);
   }
 
@@ -78,43 +86,24 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
     this.selectedItem = claim;
     this.tempProofDetails = claim.proofText; 
     
-    // NEW: Prevent broken images by clearing the preview if the data is a PDF
-    if (claim.itemImageUrl && claim.itemImageUrl.endsWith('.pdf')) {
+    // Use evidenceImageUrl for the proof preview
+    if (claim.evidenceImageUrl && claim.evidenceImageUrl.endsWith('.pdf')) {
        this.tempImageUrl = null;
     } else {
-       this.tempImageUrl = claim.itemImageUrl; 
+       this.tempImageUrl = claim.evidenceImageUrl || null; 
     }
     
     this.selectedFile = null;
-    this.isEditMode = false; 
   }
 
   goBack() {
     this.selectedItem = null;
-    this.isEditMode = false;
-  }
-
-  enterEditMode() {
-    if (!this.selectedItem) return;
-
-    this.isEditMode = true;
-    this.tempProofDetails = this.selectedItem.proofText;
-    
-    // ✨ FIX 1: Preserve the existing image instead of setting it to null
-    this.tempImageUrl = this.selectedItem.itemImageUrl && !this.selectedItem.itemImageUrl.endsWith('.pdf') 
-      ? this.selectedItem.itemImageUrl 
-      : null;
-  }
-
-  cancelEdit() {
-    this.isEditMode = false;
-    if (this.selectedItem) {
-      this.tempImageUrl = this.selectedItem.itemImageUrl && !this.selectedItem.itemImageUrl.endsWith('.pdf') 
-        ? this.selectedItem.itemImageUrl 
-        : null;
-    }
     this.selectedFile = null;
+    this.tempImageUrl = null;
   }
+
+  // Remove cancelEdit as goBack handles it now
+  // Remove enterEditMode as viewDetails handles it now
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -158,15 +147,55 @@ export class SettledItems implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveChanges() {
-    if (this.selectedItem) {
-        this.selectedItem.proofText = this.tempProofDetails;
-        
-        if (this.tempImageUrl && this.selectedFile) {
-          this.selectedItem.itemImageUrl = this.tempImageUrl as string;
-        }
-        
-        this.claimService.updateClaim(this.selectedItem);
-        this.isEditMode = false;
+    if (this.selectedItem && !this.isSaving) {
+      this.isSaving = true;
+      console.log('Saving changes for claim:', this.selectedItem.id);
+      
+      const claimToUpdate = { ...this.selectedItem, proofText: this.tempProofDetails };
+      
+      const onComplete = () => {
+        this.isSaving = false;
+        this.goBack();
+        this.cdr.detectChanges();
+      };
+
+      if (this.selectedFile) {
+        // Upload new proof image first, then save
+        this.imageService.uploadProof(this.selectedFile).subscribe({
+          next: (uploadedUrl) => {
+            console.log('Proof image uploaded:', uploadedUrl);
+            claimToUpdate.evidenceImageUrl = uploadedUrl;
+            this.claimService.updateClaim(claimToUpdate).subscribe({
+              next: () => {
+                console.log('Claim updated successfully with image');
+                onComplete();
+              },
+              error: (err) => {
+                console.error('Failed to save claim changes:', err);
+                this.isSaving = false;
+                this.cdr.detectChanges();
+              }
+            });
+          },
+          error: (err) => {
+            console.error('Failed to upload proof image:', err);
+            this.isSaving = false;
+            this.cdr.detectChanges();
+          }
+        });
+      } else {
+        this.claimService.updateClaim(claimToUpdate).subscribe({
+          next: () => {
+            console.log('Claim updated successfully without image');
+            onComplete();
+          },
+          error: (err) => {
+            console.error('Failed to save claim changes:', err);
+            this.isSaving = false;
+            this.cdr.detectChanges();
+          }
+        });
+      }
     }
   }
 }
